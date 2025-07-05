@@ -1,0 +1,61 @@
+1. 📚 Core Equations & Logic
+A full subtractor takes three 1-bit inputs — minuend (A), subtrahend (B), and borrow-in (Bin) — and produces:
+
+Difference (D)
+
+Borrow-out (Bout)
+
+Truth table (8 combinations):
+A B Bin | D Bout
+0 0  0  | 0  0
+0 0  1  | 1  1
+0 1  0  | 1  1
+0 1  1  | 0  1
+1 0  0  | 1  0
+1 0  1  | 0  0
+1 1  0  | 0  0
+1 1  1  | 1  1
+
+Difference (D):
+D is high when an odd number of inputs are 1:
+D = A ⊕ B ⊕ Bin
+Borrow-out (Bout):
+Bout is high if A is smaller than (B + Bin):
+Bout = A'·B + A'·Bin + B·Bin
+     = (~A & B) | ((A ⊕ B)' & Bin)
+Bout = (~A & B) | (~(A ^ B) & Bin)
+This aligns with simplified logic from multiple sources 
+2. 🔧 Verilog Breakdown
+verilog
+Copy
+Edit
+assign D    = a ^ b ^ Bin;
+assign Bout = (~a & b) | (~(a ^ b) & Bin);
+D: XOR of A, B, and Bin.
+
+Bout: Borrow when A < B (first term) or when A==B and Bin=1 (second term).
+3. 🧪 Testbench & Waveform Behavior
+The testbench iterates all 8 input combos, each after 10 ns (or 1 ns in other examples) delays, generating a VCD waveform viewable in GTKWave.
+
+Waveform interpretation:
+When A=0, B=0, Bin=1: D=1, Bout=1 — borrow carries forward.
+
+When A=1, B=0, Bin=1: D=0, Bout=0 — no borrow since A covers Bin.
+
+When A=0, B=1, Bin=0: D=1, Bout=1 — B > A causes a borrow.
+
+Every change in inputs immediately updates D and Bout within one simulation time-step, exactly matching the logic table definitions.
+
+4. 🧠 Why This Matters
+XOR logic elegantly captures parity (odd counts of 1’s).
+
+Borrow logic ensures exact subtraction: borrow emerges only when needed.
+
+Testbench + GTKWave lets you visually confirm correct behavior—each transition in waveforms corresponds to one row in the truth table.
+
+Real-world application: You can chain multiple full subtractors to build multi-bit binary subtractors (like in ALUs), where the Bout of one stage becomes Bin for the next 
+
+🔚 Summary
+D = A ⊕ B ⊕ Bin
+
+Bout = (A & B) | ((A ^ B) & Bin)
