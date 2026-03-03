@@ -30,3 +30,26 @@ module tb_parallel_adder;
     $finish;
   end
 endmodule
+
+
+module tb;
+  reg [3:0] a,b;
+  reg cin;
+  wire [3:0] s;
+  wire carry;
+  
+  pa u1(.a(a),.b(b),.cin(cin),.s(s),.carry(carry));
+  initial begin
+    cin=0;
+    for(int i=0;i<16;i++) begin
+      a=i;
+      for(int j=0;j<16;j++) begin
+        b=j;
+        #10;
+      end
+    end
+  end
+  initial begin
+    $monitor("time=%0t,a=%0b,b=%0b,cin=%0b,s=%0b,carry=%0b",$time,a,b,cin,s,carry);
+  end
+endmodule
