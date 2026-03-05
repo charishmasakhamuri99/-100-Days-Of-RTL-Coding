@@ -6,3 +6,11 @@ module parity_gen_4bit (
     assign p = d[0] ^ d[1] ^ d ^ d;
 
 endmodule
+
+module pg(
+  input [3:0] in,
+  output y
+);
+  assign y=~(^in);
+endmodule
+//converting even to odd parity
