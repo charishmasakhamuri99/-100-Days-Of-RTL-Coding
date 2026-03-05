@@ -21,3 +21,22 @@ module johnson_counter(
 
   assign out = q;
 endmodule
+
+
+module ring(
+  input rst,clk,
+  output reg [3:0] out
+);
+  
+  always@(posedge clk or negedge rst) begin
+    if(rst) begin
+      out[3:0]=4'b0001;
+    end
+      else begin
+        out[3]<=out[2];
+        out[2]<=out[1];
+        out[1]<=out[0];
+        out[0]<=(out[3]);
+      end
+  end
+endmodule
