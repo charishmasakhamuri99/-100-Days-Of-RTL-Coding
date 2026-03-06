@@ -18,3 +18,24 @@ module shift_reg #(parameter MSB = 8) (
     end
   end
 endmodule
+
+
+module bd #( parameter N=8) (
+  input logic in,clk,en,dir,rst,
+  output reg [N-1:0] out);
+  
+  always@(posedge clk or negedge rst) begin
+    if(!rst) begin
+      out[N-1:0]<='0;
+    end
+    else if(en) begin
+      case(dir)
+        
+        1'b0: out<={in,out[N-2:0]};//right
+        1'b1: out<={out[N-1:1],in};//left
+        default: out<= out;
+      endcase
+      end
+  end
+endmodule
+        
